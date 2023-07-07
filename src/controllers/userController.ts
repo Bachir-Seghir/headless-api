@@ -79,3 +79,44 @@ export const register = async (req: Request, res: Response) => {
     }
 
 }
+// Login 
+
+export const login = async (req: Request, res: Response) => {
+    try {
+        const { email, password } = req.body
+
+        if (!email || !password) {
+            return res.status(400)
+        }
+
+        // check if the email exist
+        const user = await User.findOne({ email }, 'password')
+
+        if (!user) {
+            return res.status(400).json({ message: 'Invalid credentials !' })
+        }
+        console.log(user);
+
+        // compare passwords 
+        const isPasswordValid = await bcrypt.compare(password, user.password)
+        console.log(isPasswordValid);
+
+        if (!isPasswordValid) {
+            return res.status(400).json({ message: 'Invalid credentials !' })
+        }
+
+        // generate JWT 
+        const token = jwt.sign({ userId: user._id }, process.env.SECRET)
+
+        // store token on a cookie
+        res.cookie('jwt', token, {
+            httpOnly: true
+        })
+        res.status(201).json({ user, token })
+
+    } catch (error) {
+        console.error('Error Login:', error);
+        return res.status(500).json({ message: 'Server Error' })
+    }
+
+}
