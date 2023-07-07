@@ -1,5 +1,5 @@
 import express from 'express'
-import http from 'http'
+import userRoutes from './routes/userRoutes'
 import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
 import compression from 'compression'
@@ -20,15 +20,13 @@ app.use(compression())
 app.use(cookieParser())
 app.use(bodyParser.json())
 
+//Routes
 
+app.use('/api', userRoutes)
 //creating the HTTP Server
-const server = http.createServer(app)
-
-server.listen(port, () => {
+app.listen(port, () => {
     console.log(`server running on http://localhost:${port}`);
-
 })
-
 
 // connect to mongoDB database
 connectDB();
