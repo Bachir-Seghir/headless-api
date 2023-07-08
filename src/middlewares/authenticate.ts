@@ -7,13 +7,15 @@ interface Request extends ExpressRequest {
 }
 
 const authenticate = async (req: Request, res: Response, next: NextFunction) => {
-    const token = req.cookies.token
+    const token = req.cookies.jwt
+
 
     if (!token) {
         return res.status(401).json({ mesage: 'Unauthorized' })
     }
     try {
         const decoded = jwt.verify(token, process.env.SECRET)
+
         req.user = decoded
         next()
     } catch (error) {
