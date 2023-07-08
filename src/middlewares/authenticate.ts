@@ -1,7 +1,12 @@
-import express, { Request, Response, NextFunction } from 'express'
+import express, { Request as ExpressRequest, Response, NextFunction } from 'express'
 import jwt from 'jsonwebtoken'
+import { IUser } from 'models/userModel'
 
-export const authenticate = async (req: Request, res: Response, next: NextFunction) => {
+interface Request extends ExpressRequest {
+    user?: any
+}
+
+const authenticate = async (req: Request, res: Response, next: NextFunction) => {
     const token = req.cookies.token
 
     if (!token) {
@@ -10,8 +15,11 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
     try {
         const decoded = jwt.verify(token, process.env.SECRET)
         req.user = decoded
+        next()
     } catch (error) {
         console.log('Authentication Error : ', error);
-        res.status(401).json({ mesage: 'Forbiden' })
+        res.status(401).json({ mesage: 'Unauthorized' })
     }
 }
+
+export default authenticate

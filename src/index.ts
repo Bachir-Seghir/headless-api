@@ -22,7 +22,7 @@ app.use(bodyParser.json())
 
 //Routes
 
-app.use('/api', userRoutes)
+app.use('/api/users', userRoutes)
 //creating the HTTP Server
 app.listen(port, () => {
     console.log(`server running on http://localhost:${port}`);

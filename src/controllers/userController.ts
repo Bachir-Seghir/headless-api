@@ -8,7 +8,7 @@ import jwt from 'jsonwebtoken'
 
 export const getAllUsers = async (req: Request, res: Response) => {
     try {
-        const users = User.find()
+        const users = await User.find()
         res.status(200).json(users)
     } catch (error) {
         console.error('Error getting users:', error);
@@ -23,9 +23,9 @@ export const getUserByEmail = (email: string) => User.findOne({ email })
 
 export const getUserById = async (req: Request, res: Response) => {
     try {
-        const { id } = req.body
+        const { id } = req.params
 
-        const user = User.findById(id)
+        const user = await User.findById(id)
 
         if (!user) {
             return res.status(404).json({ message: 'User Not Found' })
