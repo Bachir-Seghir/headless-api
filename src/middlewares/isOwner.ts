@@ -1,24 +1,19 @@
-import { Request, Response, NextFunction } from 'express'
+import { Request as ExpressRequest, Response, NextFunction } from 'express'
 import jwt from 'jsonwebtoken'
 import { getUserById } from '../controllers/userController'
 
+interface Request extends ExpressRequest {
+    user?: any
+}
+
 const isOwner = async (req: Request, res: Response, next: NextFunction) => {
 
-    const token = req.cookies.token
-    const requestedUserId = req.params.id
-
-    if (!token) {
-        return res.status(401).json({ mesage: 'Unauthorized' })
-    }
+    const { id } = req.params
+    const requestedUserId = req.user?._id
 
     try {
-        const decoded = jwt.verify(token, process.env.SECRET) as { userId: string }
-        const { userId } = decoded
-
-        const user = await getUserById(userId)
-
         // check if the authenticated user is the owner of the resources being accessed
-        if (user._id.toString() === userId) {
+        if (requestedUserId.toString() === id) {
             next()
         } else {
             return res.status(403).json({ mesage: 'Unauthorized' })

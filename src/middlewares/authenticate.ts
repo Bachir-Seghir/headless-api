@@ -1,5 +1,6 @@
 import { Request as ExpressRequest, Response, NextFunction } from 'express'
 import jwt from 'jsonwebtoken'
+import { getUserById } from '../controllers/userController'
 
 interface Request extends ExpressRequest {
     user?: any
@@ -10,12 +11,14 @@ const authenticate = async (req: Request, res: Response, next: NextFunction) => 
 
 
     if (!token) {
-        return res.status(401).json({ mesage: 'Unauthorized' })
+        return res.status(401).json({ mesage: 'Not Authenticated' })
     }
     try {
-        const decoded = jwt.verify(token, process.env.SECRET)
+        const decoded = jwt.verify(token, process.env.SECRET) as { userId: string }
+        const { userId } = decoded
 
-        req.user = decoded
+        const user = await getUserById(userId)
+        req.user = user
         next()
     } catch (error) {
         console.log('Authentication Error : ', error);

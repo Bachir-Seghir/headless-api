@@ -100,3 +100,23 @@ export const getUserById = (id: string) => User.findById(id)
 
 // get user by email
 export const getUserByEmail = (email: string) => User.findOne({ email })
+
+// Delete User by ID
+export const deleteUserById = async (req: Request, res: Response) => {
+    try {
+        const { id } = req.params
+        console.log(id);
+
+        const deletedUser = await User.findOneAndDelete({ _id: id })
+
+        if (!deletedUser) {
+            return res.status(404).json({ message: 'User not found' })
+        }
+
+        return res.json(deletedUser)
+
+    } catch (error) {
+        return res.status(500).json({ message: 'Server Error' })
+    }
+
+}
