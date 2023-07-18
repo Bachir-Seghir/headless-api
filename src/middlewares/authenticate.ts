@@ -1,13 +1,12 @@
-import express, { Request as ExpressRequest, Response, NextFunction } from 'express'
+import { Request as ExpressRequest, Response, NextFunction } from 'express'
 import jwt from 'jsonwebtoken'
-import { IUser } from 'models/userModel'
 
 interface Request extends ExpressRequest {
     user?: any
 }
 
 const authenticate = async (req: Request, res: Response, next: NextFunction) => {
-    const token = req.cookies.jwt
+    const token = req.cookies.token
 
 
     if (!token) {

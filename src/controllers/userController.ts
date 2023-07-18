@@ -16,30 +16,6 @@ export const getAllUsers = async (req: Request, res: Response) => {
     }
 }
 
-// Get User by Email
-export const getUserByEmail = (email: string) => User.findOne({ email })
-
-// Get User by ID
-
-export const getUserById = async (req: Request, res: Response) => {
-    try {
-        const { id } = req.params
-
-        const user = await User.findById(id)
-
-        if (!user) {
-            return res.status(404).json({ message: 'User Not Found' })
-        }
-
-        res.status(200).json(user)
-    } catch (error) {
-        console.error('Error getting user by Id:', error);
-        res.status(500).json({ message: 'Server Error' })
-    }
-
-}
-
-
 // Register New User
 
 export const register = async (req: Request, res: Response) => {
@@ -51,7 +27,7 @@ export const register = async (req: Request, res: Response) => {
         }
 
         // check if the email is already registred
-        const existingUser = await getUserByEmail(email)
+        const existingUser = await User.findOne({ email })
 
         if (existingUser) {
             return res.status(409).json({ message: 'Email is already registred' })
@@ -68,7 +44,7 @@ export const register = async (req: Request, res: Response) => {
         const token = jwt.sign({ userId: user._id }, process.env.SECRET)
 
         // store token on a cookie
-        res.cookie('jwt', token, {
+        res.cookie('token', token, {
             httpOnly: true
         })
         res.status(201).json({ user, token })
@@ -107,7 +83,7 @@ export const login = async (req: Request, res: Response) => {
         const token = jwt.sign({ userId: user._id }, process.env.SECRET)
 
         // store token on a cookie
-        res.cookie('jwt', token, {
+        res.cookie('token', token, {
             httpOnly: true
         })
         res.status(201).json({ user, token })
@@ -118,3 +94,9 @@ export const login = async (req: Request, res: Response) => {
     }
 
 }
+
+// get user by ID 
+export const getUserById = (id: string) => User.findById(id)
+
+// get user by email
+export const getUserByEmail = (email: string) => User.findOne({ email })
