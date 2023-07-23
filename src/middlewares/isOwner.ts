@@ -19,7 +19,7 @@ const isOwner = async (req: Request, res: Response, next: NextFunction) => {
         if (authenticatedUserId === requestedUserId || authenticatedUserRole === Role.ADMIN) {
             next()
         } else {
-            return res.status(403).json({ mesage: 'Unauthorized' })
+            return res.status(403).json({ mesage: 'Forbidden - You are not allowed to access this ressource' })
         }
     } catch (error) {
         res.status(500).json({ message: 'Server Error' });

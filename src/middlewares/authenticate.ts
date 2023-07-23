@@ -11,7 +11,7 @@ const authenticate = async (req: Request, res: Response, next: NextFunction) => 
 
 
     if (!token) {
-        return res.status(401).json({ mesage: 'Not Authenticated' })
+        return res.status(401).json({ mesage: "Authentication Error: You must log in to access the requested resource." })
     }
     try {
         const decoded = jwt.verify(token, process.env.SECRET) as { userId: string }
@@ -22,7 +22,7 @@ const authenticate = async (req: Request, res: Response, next: NextFunction) => 
         next()
     } catch (error) {
         console.log('Authentication Error : ', error);
-        res.status(401).json({ mesage: 'Unauthorized' })
+        res.status(401).json({ mesage: "Authentication Error: You must log in to access the requested resource." })
     }
 }
 

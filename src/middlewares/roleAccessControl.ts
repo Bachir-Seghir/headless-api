@@ -10,7 +10,7 @@ export const checkUserRole = (roles: Role[]) => {
         const userRole = req.user?.role;
         console.log(userRole);
         if (!userRole || !roles.includes(userRole)) {
-            return res.status(403).json({ message: "Forbidden" })
+            return res.status(403).json({ message: "Access Denied: You do not have sufficient privileges to access this resource." })
         }
 
 
