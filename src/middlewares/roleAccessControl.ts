@@ -1,10 +1,11 @@
 import { Request as ExpressRequest, Response, NextFunction } from 'express'
+import { Role } from '../security/roles';
 
 interface Request extends ExpressRequest {
     user?: any
 }
 
-export const checkUserRole = (roles: string[]) => {
+export const checkUserRole = (roles: Role[]) => {
     return (req: Request, res: Response, next: NextFunction) => {
         const userRole = req.user?.role;
         console.log(userRole);

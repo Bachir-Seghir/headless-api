@@ -25,7 +25,7 @@ const UserSchema = new Schema<IUser>({
     },
     role: {
         type: String,
-        required: true,
+        enum: ['admin', 'user'],
         default: 'user'
     },
     jwt: {
