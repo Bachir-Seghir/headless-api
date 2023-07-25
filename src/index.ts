@@ -1,11 +1,12 @@
 import express from 'express'
-import userRoutes from './routes/userRoutes'
 import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
 import compression from 'compression'
 import cors from 'cors'
 import dotenv from 'dotenv';
 import connectDB from './config/db'
+import userRoutes from './routes/userRoutes'
+import adminRoutes from './routes/adminRoutes'
 
 dotenv.config();
 
@@ -23,6 +24,7 @@ app.use(bodyParser.json())
 //Routes
 
 app.use('/api/users', userRoutes)
+app.use('/api/admin', adminRoutes)
 //creating the HTTP Server
 app.listen(port, () => {
     console.log(`server running on http://localhost:${port}`);

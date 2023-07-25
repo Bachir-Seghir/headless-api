@@ -20,7 +20,7 @@ export const getAllUsers = async (req: Request, res: Response) => {
 
 export const register = async (req: Request, res: Response) => {
     try {
-        const { username, email, password } = req.body
+        const { username, email, password, isAdmin } = req.body
 
         if (!email || !username || !password) {
             return res.status(400)
@@ -37,7 +37,12 @@ export const register = async (req: Request, res: Response) => {
         const hashedPassword = await bcrypt.hash(password, 10)
 
         // create new user
-        const user: IUser = new User({ username, email, password: hashedPassword })
+        const user: IUser = new User({
+            username,
+            email,
+            password: hashedPassword,
+            role: isAdmin ? 'admin' : 'user'
+        })
         await user.save()
 
         // generate JWT 
@@ -66,7 +71,7 @@ export const login = async (req: Request, res: Response) => {
         }
 
         // check if the email exist
-        const user = await User.findOne({ email }, 'password + username')
+        const user = await User.findOne({ email }, 'password + username + role + email')
 
         if (!user) {
             return res.status(400).json({ message: 'Invalid credentials !' })
@@ -86,7 +91,7 @@ export const login = async (req: Request, res: Response) => {
         res.cookie('token', token, {
             httpOnly: true
         })
-        res.status(201).json({ user, token })
+        res.status(201).json({ token, username: user.username, role: user.role })
 
     } catch (error) {
         console.error('Error Login:', error);
@@ -105,7 +110,6 @@ export const getUserByEmail = (email: string) => User.findOne({ email })
 export const deleteUserById = async (req: Request, res: Response) => {
     try {
         const { id } = req.params
-        console.log(id);
 
         const deletedUser = await User.findOneAndDelete({ _id: id })
 
@@ -116,7 +120,64 @@ export const deleteUserById = async (req: Request, res: Response) => {
         return res.json(deletedUser)
 
     } catch (error) {
-        return res.status(500).json({ message: 'Server Error' })
+        return res.status(500).json({ message: 'Server Error', error })
     }
 
+}
+
+
+// Update Me 
+export const updateMe = async (req: Request, res: Response) => {
+    const { id } = req.params
+    const { username, password } = req.body
+
+    // create an update object 
+    const updatedUser: { username?: string, password?: string } = {}
+
+    // Hash the password 
+    let hashedPassword: string | undefined
+    if (password) {
+        hashedPassword = await bcrypt.hash(password, 10)
+        updatedUser.password = hashedPassword
+    }
+    if (username) {
+        updatedUser.username = username
+    }
+    if (!username && !password) {
+        return res.status(400).json({ message: 'Please provide the new data to be updated' })
+    }
+    try {
+        const user = await User.findByIdAndUpdate(id, updatedUser, { new: true })
+        if (!user) {
+            return res.status(404).json({ message: 'User not found.' })
+        }
+
+        return res.status(200).json({ message: 'User updated successfully.', user })
+    } catch (error) {
+        return res.status(500).json({ message: 'An occured while updating the user ', error })
+    }
+}
+
+// Update User By Admin
+export const updateUser = async (req: Request, res: Response) => {
+    const { id } = req.params
+    const newData = { ...req.body }
+
+    // Hash the password 
+    let hashedPassword: string | undefined
+    if (newData.password) {
+        hashedPassword = await bcrypt.hash(newData.password, 10)
+        newData.password = hashedPassword
+    }
+
+    try {
+        const user = await User.findByIdAndUpdate(id, newData, { new: true })
+        if (!user) {
+            return res.status(404).json({ message: 'User not found.' })
+        }
+
+        return res.status(200).json({ message: 'User updated successfully.', user })
+    } catch (error) {
+        return res.status(500).json({ message: 'An occured while updating the user ', error })
+    }
 }
