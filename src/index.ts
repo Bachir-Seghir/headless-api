@@ -7,6 +7,7 @@ import dotenv from 'dotenv';
 import connectDB from './config/db'
 import userRoutes from './routes/userRoutes'
 import adminRoutes from './routes/adminRoutes'
+import authRoutes from './routes/authRoutes'
 
 dotenv.config();
 
@@ -23,8 +24,11 @@ app.use(bodyParser.json())
 
 //Routes
 
+app.use('/api/auth', authRoutes)
 app.use('/api/users', userRoutes)
 app.use('/api/admin', adminRoutes)
+
+
 //creating the HTTP Server
 app.listen(port, () => {
     console.log(`server running on http://localhost:${port}`);

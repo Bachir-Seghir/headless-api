@@ -8,8 +8,7 @@ const isOwner = async (req: Request, res: Response, next: NextFunction) => {
 
     const requestedUserId = req.params.id
     const authenticatedUserId = req.user?._id.toString()
-    console.log(authenticatedUserId);
-    console.log(requestedUserId);
+
     try {
         // check if the authenticated user is the owner of the resources being accessed
         if (authenticatedUserId === requestedUserId) {
