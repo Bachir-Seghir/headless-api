@@ -10,12 +10,6 @@ This is a Node.js Express API that demonstrates how to implement Role-Based Acce
 - Middleware for ownership verification to allow owners to perform specific operations.
 - Centralized management of RBAC roles and permissions.
 
-## Requirements
-
-- Node.js (Version X.X.X)
-- MongoDB (Version X.X.X)
-- npm (Node Package Manager)
-
 ## Installation
 
 1. Clone the repository:
@@ -23,6 +17,7 @@ This is a Node.js Express API that demonstrates how to implement Role-Based Acce
    ```bash
    git clone https://github.com/your-username/your-repo.git
    ```
+
 2. Navigate to the project directory:
 
    ```bash
@@ -34,7 +29,7 @@ This is a Node.js Express API that demonstrates how to implement Role-Based Acce
    ```bash
    npm install
    ```
-   
+
 4. Create a `.env` file in the root directory and add the following environment variables:
 
    ```bash
@@ -48,7 +43,6 @@ Replace the values accordingly.
    ```bash
    npm start
    ```
-
 
 The server should now be running on `http://localhost:3000`.
 
@@ -88,7 +82,6 @@ This API uses JWT-based authentication for user login and registration. It also 
 ## Contributing
 
 Contributions are welcome! Feel free to submit bug reports, feature requests, or pull requests to improve this API.
-
 
 ## Authors
 
