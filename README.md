@@ -15,7 +15,7 @@ This is a Node.js Express API that demonstrates how to implement Role-Based Acce
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/your-username/your-repo.git
+   git clone https://github.com/bachir-seghir/headless-api.git
    ```
 
 2. Navigate to the project directory:
@@ -71,9 +71,9 @@ The server should now be running on `http://localhost:3000`.
 
 ## Permissions
 
-- `read`: Read data (e.g., get user data).
-- `write`: Create or update data (e.g., user registration).
-- `delete`: Delete data (e.g., delete user).
+- `read`: Get user data.
+- `write`: User registration or Update User.
+- `delete`: Delete user.
 
 ## Authentication and Authorization
 
